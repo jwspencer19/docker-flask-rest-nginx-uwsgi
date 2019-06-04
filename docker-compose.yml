@@ -1,0 +1,33 @@
+version: "3.7"
+
+services:
+
+    flask:
+        build: ./flask
+        container_name: flask
+        restart: always
+        environment:
+        - APP_NAME=MyFlaskApp
+        - DATABASE_URL=postgresql://postgres:docker@BDS-208-71:5432/postgres
+        expose:
+        - 8080
+
+    nginx:
+        build: ./nginx
+        container_name: nginx
+        restart: always
+        ports:
+        - "80:80"
+
+    pg-docker:
+        image: postgres:latest
+        environment:
+        - POSTGRES_PASSWORD=docker        
+        volumes:
+        - db-data:/var/lib/postgresql/data
+        ports:
+        - 5432:5432
+ 
+volumes:
+    db-data:
+        driver: local
