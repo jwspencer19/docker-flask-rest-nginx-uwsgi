@@ -21,15 +21,15 @@ pip install flask uwsgi
 pip freeze > requirements.txt
 
 ##### create .dockerignore file with
-env/
-__pycache__/
+    venv/
+    __pycache__/
 
 
 ##### to test our flask app locally
-export FLASK_APP=run.py
-export FLASK_ENV=development
+    export FLASK_APP=run.py
+    export FLASK_ENV=development
 
-flask run
+    flask run
 
 
 ##### start postgres docker container separately for now, until added to docker-compose
