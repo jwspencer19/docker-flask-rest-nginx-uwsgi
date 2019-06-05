@@ -8,7 +8,7 @@ services:
         restart: always
         environment:
         - APP_NAME=MyFlaskApp
-        - DATABASE_URL=postgresql://postgres:docker@BDS-208-71:5432/postgres
+        - DATABASE_URL=postgresql://postgres:docker@pg-docker:5432/postgres
         expose:
         - 8080
 
