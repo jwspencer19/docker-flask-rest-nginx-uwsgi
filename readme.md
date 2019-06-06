@@ -1,50 +1,39 @@
-##### on CentOS 7 system to install python3.x
-    yum install centos-release-scl
-    yum install rh-python36
+##### Overview
+    These are steps to run three Docker containers:
+    - Python Flask REST using uWSGI
+    - nginx
+    - postgres.
+    
+    docker-compose will be used to launch the three Docker containers
 
-##### on CentOS 7 system to enable python3.x
-    scl enable rh-python36 bash
+    Prerequisites: 
+    
+    install docker - google instructions for your flavor or Linux or Mac or Windows 10
+    
+    install docker-compose
 
-##### now python 3.x, note: only set in this shell session. Exit session will go back to 2.x
-    python --version
+    Instructions to install docker-compose
+    https://docs.docker.com/compose/install/
+    
 
-##### create virtual enviroment
-    virtualenv venv --python=python3.6
+##### build images 
+    sudo docker-compose build
 
-##### activate the virtual environment
-    source venv/bin/activate
+##### run containers
+    sudo docker-compose up
 
-##### pip install packages
-    pip install flask uwsgi
+##### interface with Flask REST app on port 8080. To change the port edit docker-compose.yml under nginx:
+        nginx:
+        build: ./nginx
+        container_name: nginx
+        restart: always
+        ports:
+        - "8080:80"
 
-##### create requirements.txt
-    pip freeze > requirements.txt
-
-##### create .dockerignore file with
-    venv/
-    __pycache__/
-
-
-##### to test our flask app locally
-    export FLASK_APP=run.py
-    export FLASK_ENV=development
-
-    flask run
-
-
-##### start postgres docker container separately for now, until added to docker-compose
-    docker run --rm  --name pg-docker -e POSTGRES_PASSWORD=docker -v /home/spencer/postgres_data:/var/lib/postgresql/data -d -p 5432:5432 postgres:latest
-
-
-##### build our images 
-    docker-compose build
-
-##### run our containers
-    docker-compose up
 
 ##### stop and remove containers
-    docker-compose down
+    sudo docker-compose down
 
 ##### rebuild and run
-    docker-compose up --build
+    sudo docker-compose up --build
 
