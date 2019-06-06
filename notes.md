@@ -36,15 +36,4 @@
     docker run --rm  --name pg-docker -e POSTGRES_PASSWORD=docker -v /home/spencer/postgres_data:/var/lib/postgresql/data -d -p 5432:5432 postgres:latest
 
 
-##### build our images 
-    docker-compose build
-
-##### run our containers
-    docker-compose up
-
-##### stop and remove containers
-    docker-compose down
-
-##### rebuild and run
-    docker-compose up --build
 

@@ -1,8 +1,8 @@
 ##### Overview
     These are steps to run three Docker containers:
-    - Python Flask REST using uWSGI
+    - python Flask REST app using uWSGI
     - nginx
-    - postgres.
+    - postgres
     
     docker-compose will be used to launch the three Docker containers
 
