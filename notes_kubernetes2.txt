@@ -1,0 +1,132 @@
+# quick way to run a Docker image on Kubernetes cluster without a deployment file
+kubectl run my-name-here --image=image-here:version --port 8080
+
+# examples to deploy a Docker image
+kubectl run hello-minikube --image=gcr.io/google.containers/echoserver:1.4 --port=8080
+kubectl run my-flask-app --image=docker-flask-rest-nginx-uwsgi_flask:latest --port=5000
+kubectl run hazelcast --image=hazelcast --port=5701
+
+# expose the deployment, NodePort allows us to have a external IP address exposed
+kubectl expose deployment my-flask-app --type=NodePort
+kubectl expose deployment hello-minikube --type=NodePort
+
+
+# useful commmands
+kubectl get pods
+kubectl get pods --output=wide
+kubectl get pod -o wide --all-namespaces
+kubectl describe pod <pod-name>
+
+kubectl cluster-info
+kubectl get deployments my-flask-app
+kubectl describe deployments my-flask-app
+kubectl get services
+kubectl describe services my-flask-app
+
+# delete deployment
+kubectl delete deployment my-flask-app
+
+# deploy using a deployment file
+kubectl apply -f ./deployment.yaml
+# expose it
+kubectl expose deployment tomcat-deployment --type=NodePort
+# determine its url
+kubectl get service
+
+# port forward
+kubectl get pod tomcat-deployment
+kubectl port-forward tomcat-deployment-846f998dd-896p9 8083:8080
+
+# attach
+kubectl attach tomcat-deployment-846f998dd-896p9
+
+# exec
+kubectl exec -it tomcat-deployment-846f998dd-896p9 bash
+#-or-
+kubectl exec -it <pod-name> bash
+
+# label pods using label: healthy=false
+kubectl label pods tomcat-deployment-846f998dd-896p9 healthy=false
+
+
+# scale an existing deployment instead of stopping and editing the deployment.yaml file and restarting
+kubectl scale --replicas=4 deployment/tomcat-deployment
+# get info on the deployment
+kubectl get deployments
+kubectl describe deployments tomcat-deployment
+
+# instead of NodePort, we will use LoadBalancer
+kubectl expose deployment tomcat-deployment --type=LoadBalancer --port=8080 --target-port=8080 --name tomcat-load-balancer
+
+# see what IP address was assigned for the service
+kubectl describe services tomcat-load-balancer
+
+# see the rollout status ofa a deployment
+kubectl rollout status deployment tomcat-deployment
+
+# if we wanted to update the tomcat image in our deployment
+kubectl set image deployment/tomcat-deployment tomcat=tomcat:9.0.1
+
+# get the rollout history
+kubectl rollout history deployment/tomcat-deployment
+
+# get more details on a rollout version
+kubectl rollout history deployment/tomcat-deployment --revision=2
+
+
+# label a node, for example set label storageType=ssd to a node
+# first get nodes
+kubectl get nodes
+kubectl label node bos-spencer-nba-test storageType=ssd
+
+# to see our label
+kubectl describe node bos-spencer-nba-test
+# note can use nodeSelector in deployment file to choose this node
+
+
+# health checks: readiness probe and liveness probe in deployment.yaml
+cd /home/spencer/Git_hub/kubernetes-demo/Basic and Core Concepts/Health Checks/
+# apply the deployment change
+kubectl apply -f ./deployment.yaml
+
+# look the details, now see readiness and liveness entries
+kubectl describe deployment tomcat-deployment
+
+
+# Dashboard
+
+# install the dashboard - do I need this?
+kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
+# not found, try this instead:
+# https://github.com/kubernetes/dashboard
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml
+
+# accessing it via a proxy
+kubectl proxy
+# output:
+starting to serve on 127.0.0.1:8001
+curl http://localhost:8001/api/
+
+# or
+kubectl proxy --port=8080 &
+kubectl proxy --port=8082 &
+
+# navigate in browser
+http://localhost:8001/ui
+http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
+
+
+# DNS & Service Discovery
+C:\Git_repo\kubernetes-demo\Advanced Kubernetes Usage\DNS and Service Discovery
+
+# deploy our MySQL service
+kubectl create -f mysql-deployment.yaml
+
+# check if successful
+kubectl get pods
+
+# deploy our Wordpress service
+kubectl create -f wordpress-deployment.yaml
+
+# check our service and verify it is a LoadBalancer
+kubectl get services wordpress

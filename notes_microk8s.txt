@@ -1,0 +1,117 @@
+MicroK8s
+
+https://computingforgeeks.com/deploy-lightweight-kubernetes-with-microk8s-and-snap/
+
+
+microk8s.status
+
+microk8s.kubectl cluster-info
+
+microk8s.kubectl get nodes
+
+# If you’re not comfortable with microk8s.kubectl command, you can create an alias for it.
+echo "alias kubectl='microk8s.kubectl'" >>~/.bashrc
+source ~/.bashrc
+
+microk8s.kubectl  get nodes -o wide
+
+
+
+# Enable Addons
+# example:
+microk8s.enable dashboard dns
+microk8s.enable storage
+microk8s.enable istio
+
+# Disable Addons
+# example:
+microk8s.disable istio
+
+
+
+# Deploying Pods and Containers on MicroK8s
+microk8s.kubectl run nginx --replicas 2 --image nginx
+
+microk8s.kubectl get deployments
+
+# Expose service:
+microk8s.kubectl expose deployment nginx --port 80 --target-port 80 --type ClusterIP --selector=run=nginx --name nginx
+
+microk8s.kubectl get services
+
+# Delete Deployment
+microk8s.kubectl delete deployment nginx
+microk8s.kubectl delete service nginx
+
+
+
+# Stopping and Restarting MicroK8s
+microk8s.stop
+microk8s.start
+
+# Removing MicroK8s
+microk8s.reset
+snap remove microk8s
+
+
+# Installing the Dashboard
+microk8s.enable dns dashboard ingress
+
+# to see various services started
+microk8s.kubectl get all
+
+# proxy to pass requests to access the Dashboard
+microk8s.kubectl proxy --accept-hosts=.* --address=0.0.0.0 &
+microk8s.kubectl proxy --port=8002 --accept-hosts=.* --address=0.0.0.0 &
+
+# 
+microk8s.kubectl get all --all-namespaces
+#output...
+kube-system   service/kubernetes-dashboard   ClusterIP      10.152.183.201   <none>        443/TCP             18m
+kube-system   service/monitoring-grafana     ClusterIP      10.152.183.250   <none>        80/TCP              18m
+kube-system   service/monitoring-influxdb    ClusterIP      10.152.183.116   <none>        8083/TCP,8086/TCP   18m
+
+kubectl cluster-info
+# output
+Kubernetes master is running at https://127.0.0.1:16443
+Heapster is running at https://127.0.0.1:16443/api/v1/namespaces/kube-system/services/heapster/proxy
+KubeDNS is running  at https://127.0.0.1:16443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+Grafana is running at https://127.0.0.1:16443/api/v1/namespaces/kube-system/services/monitoring-grafana/proxy
+InfluxDB is running at https://127.0.0.1:16443/api/v1/namespaces/kube-system/services/monitoring-influxdb:http/proxy
+
+# the default username/password in the file: username:admin
+cat /var/snap/microk8s/current/credentials/basic_auth.csv
+
+# to see what microk8s services are running
+microk8s.inspect
+
+kubectl get po -o wide --all-namespaces
+
+kubectl logs kubernetes-dashboard-6fd7f9c494-jvffs --namespace=kube-system
+
+# Working with locally built images without a registry
+docker images
+docker save mynginx > myimage.tar
+microk8s.ctr -n k8s.io image import myimage.tar
+microk8s.ctr -n k8s.io images ls
+
+------
+
+          value: postgresql://$(POSTGRES_DB_HOST):docker@pg-docker:5432/postgres
+          value: postgresql://postgres:docker@$(POSTGRES_DB_HOST):5432/postgres          
+
+https://192.168.175.59:16443/api/v1/namespaces/kube-system/services/monitoring-grafana/proxy 
+https://192.168.175.59:16443/api/v1/namespaces/kube-system/services
+https://192.168.175.59:16443/api/v1/namespaces/kube-system/services/kubernetes-dashboard
+
+https://192.168.175.59:16443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
+
+
+# not sure below?
+http://bos-spencer-nba-test:8002/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
+
+http://127.0.0.1:8080/api/v1/namespaces/kube-system/services/monitoring-grafana/proxy
+http://bos-spencer-nba-test/api/v1/namespaces/kube-system/services/monitoring-grafana/proxy
+and use the username and password shown with microk8s.config.
+
+curl http://localhost:8002/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
