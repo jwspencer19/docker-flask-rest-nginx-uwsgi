@@ -12,6 +12,7 @@ kubectl expose deployment hello-minikube --type=NodePort
 
 
 # useful commmands
+kubectl get all --all-namespaces
 kubectl get pods
 kubectl get pods --output=wide
 kubectl get pod -o wide --all-namespaces
@@ -130,3 +131,33 @@ kubectl create -f wordpress-deployment.yaml
 
 # check our service and verify it is a LoadBalancer
 kubectl get services wordpress
+
+# create file busybox.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: default
+spec:
+  containers:
+  - name: busybox
+    image: busybox:1.28
+    command:
+      - sleep
+      - "3600"
+    imagePullPolicy: IfNotPresent
+  restartPolicy: Always
+
+# create pod using this file
+kubectl apply -f busybox.yaml
+
+# test if DNS is working
+kubectl exec -ti busybox -- nslookup kubernetes.default
+
+kubectl get pods --namespace=kube-system
+
+# logs on the DNS containers
+kubectl logs kube-dns-6bfbdd666c-6rx9w kubedns -n kube-system
+
+# note fix for ubuntu, open the firewall
+sudo ufw allow in on cbr0 && sudo ufw allow out on cbr0
