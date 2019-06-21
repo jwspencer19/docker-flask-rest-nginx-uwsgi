@@ -12,11 +12,18 @@ spec:
       labels:
         app: nginx-app
     spec:
+      volumes:
+      - name: task-pv-storage
+        persistentVolumeClaim:
+          claimName: task-pv-claim    
       containers:
       - name: nginx
         image: nginx:1.13.12
         ports:
         - containerPort: 80
+        volumeMounts:
+        - mountPath: "/etc/nginx"        
+          name: task-pv-storage        
 ---
 apiVersion: v1
 kind: Service
