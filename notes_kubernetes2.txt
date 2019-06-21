@@ -181,6 +181,27 @@ cd /home/spencer/mypv
 mv /usr/share/nginx/html/files.tar .
 tar -xvf files.tar .
 
+# edit config file to flask app
+cd /home/spencer/mypv/conf.d/
+vi default.conf
+server {
+    listen       80;
+    server_name  localhost;
+
+    #charset koi8-r;
+    #access_log  /var/log/nginx/host.access.log  main;
+
+    location / {
+        include uwsgi_params;
+        uwsgi_pass flaskapp-svc:8080;
+    }
+
+    location /flask {  
+        include uwsgi_params;
+        uwsgi_pass flaskapp-svc:8080;
+    }
+...
+
 # run docker container with local copy of config files
 docker run --name mynginx2 -v /home/spencer/mypv:/etc/nginx -p 8083:80 nginx
 # run in background
