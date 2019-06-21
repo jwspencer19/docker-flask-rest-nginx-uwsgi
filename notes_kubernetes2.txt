@@ -163,3 +163,56 @@ kubectl logs kube-dns-6bfbdd666c-6rx9w kubedns -n kube-system
 
 # note fix for ubuntu, open the firewall
 sudo ufw allow in on cbr0 && sudo ufw allow out on cbr0
+
+
+# nginx
+
+# first test nginx as a docker container - to debug errors trying to use volume for conf files
+docker run --name mynginx2 -v /home/spencer/html:/usr/share/nginx/html -p 8083:80 nginx
+
+# bash into it and tar up conf directory contetns
+docker exec -it mynginx2 bash
+cd /etc/nginx
+tar -cvf /usr/share/nginx/html/files.tar .
+# exit docker container
+exit
+# on host, untar files
+cd /home/spencer/mypv
+mv /usr/share/nginx/html/files.tar .
+tar -xvf files.tar .
+
+# run docker container with local copy of config files
+docker run --name mynginx2 -v /home/spencer/mypv:/etc/nginx -p 8083:80 nginx
+# run in background
+docker run --name mynginx2 -v /home/spencer/mypv:/etc/nginx -p 8083:80 -d nginx
+# not sure what -P is
+docker run --name mynginx2 -v /home/spencer/mypv:/etc/nginx -p 8083:80 -P -d nginx
+
+# exec into nginx pod name running debian
+kubectl exec -it nginx-deployment-94d56d68c-rt9p6 bash
+
+# install vi
+sudo apt-get update
+sudo apt-get install vim
+
+# check nginx status
+service nginx status
+
+# restart nginx
+service nginx restart
+
+
+# create a Persistent Volume
+kubectl apply -f pv-volume.yaml
+
+# view information about the PersistentVolume:
+kubectl get pv task-pv-volume
+
+# create the PersistentVolumeClaim
+kubectl apply -f pv-claim.yaml
+
+# look again at the PersistentVolume, output shows a STATUS of Bound
+kubectl get pv task-pv-volume
+
+# look at the  PersistentVolumeClaim:
+kubectl get pvc task-pv-claim
