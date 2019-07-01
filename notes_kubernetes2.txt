@@ -229,6 +229,8 @@ kubectl apply -f pv-volume.yaml
 # view information about the PersistentVolume:
 kubectl get pv task-pv-volume
 
+kubectl describe pv task-pv-volume
+
 # create the PersistentVolumeClaim
 kubectl apply -f pv-claim.yaml
 
