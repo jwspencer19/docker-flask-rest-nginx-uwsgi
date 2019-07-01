@@ -32,6 +32,10 @@ spec:
         app: postgres
         tier: mypostgres
     spec:
+#      volumes:
+#      - name: task-pv-storage-postgres
+#        persistentVolumeClaim:
+#          claimName: task-pv-claim-postgres        
       containers:
       - image: postgres:latest
         name: mypostgres
@@ -41,3 +45,7 @@ spec:
         ports:
         - containerPort: 5432
           name: mypostgres
+#        volumeMounts:
+#        - mountPath: "/var/lib/postgresql/data"        
+#          name: task-pv-storage-postgres
+#          subPath: mypostgresdata          
