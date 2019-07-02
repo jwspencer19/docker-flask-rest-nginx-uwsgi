@@ -33,10 +33,9 @@ spec:
         tier: mypostgres
     spec:
       volumes:
-      - name: task-pv-storage-postgres
-        hostPath:
-          path: /home/spencer/mypv/mypostgresdata
-          type: Directory
+      - name: pv-storage-postgres
+        persistentVolumeClaim:
+          claimName: pv-claim-postgres        
       containers:
       - image: postgres:latest
         name: mypostgres
@@ -48,5 +47,5 @@ spec:
           name: mypostgres
         volumeMounts:
         - mountPath: "/var/lib/postgresql/data"        
-          name: task-pv-storage-postgres
-         
+          name: pv-storage-postgres
+          
