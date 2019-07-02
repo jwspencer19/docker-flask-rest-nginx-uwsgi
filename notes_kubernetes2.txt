@@ -25,6 +25,7 @@ kubectl get deployments my-flask-app
 kubectl describe deployments my-flask-app
 kubectl get services
 kubectl describe services my-flask-app
+kubectl get all -n kube-system
 
 # delete deployment
 kubectl delete deployment my-flask-app
