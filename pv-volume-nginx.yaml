@@ -1,7 +1,7 @@
 kind: PersistentVolume
 apiVersion: v1
 metadata:
-  name: task-pv-volume
+  name: pv-volume-nginx
   labels:
     type: local
 spec:
@@ -11,4 +11,4 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/home/spencer/mypv"
+    path: "/home/spencer/mypv/mynginxdata"

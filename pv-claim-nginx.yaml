@@ -1,11 +1,11 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: task-pv-claim
+  name: pv-claim-nginx
 spec:
   storageClassName: manual
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 3Gi 
+      storage: 10Gi 
