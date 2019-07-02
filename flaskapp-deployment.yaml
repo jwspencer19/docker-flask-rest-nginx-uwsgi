@@ -37,7 +37,7 @@ spec:
         name: flaskapp
         env:
         - name: POSTGRES_DB_HOST
-          value: my-postgres-svc
+          value: postgres-svc
         - name: DATABASE_URL
           value: postgresql://postgres:docker@$(POSTGRES_DB_HOST):5432/postgres          
         ports:
