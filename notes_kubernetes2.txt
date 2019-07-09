@@ -1,3 +1,10 @@
+TODO:
+- understand deployments and dependencies
+- understand networks with deployments, keep together vs anywhere. Pros and cons.
+- script Postman
+- update JWT access
+
+
 # quick way to run a Docker image on Kubernetes cluster without a deployment file
 kubectl run my-name-here --image=image-here:version --port 8080
 
@@ -9,7 +16,7 @@ kubectl run hazelcast --image=hazelcast --port=5701
 # expose the deployment, NodePort allows us to have a external IP address exposed
 kubectl expose deployment my-flask-app --type=NodePort
 kubectl expose deployment hello-minikube --type=NodePort
-
+kubectl expose deployment kubernetes-dashboard --type=NodePort
 
 # useful commmands
 kubectl get all --all-namespaces
@@ -98,6 +105,22 @@ kubectl describe deployment tomcat-deployment
 
 
 # Dashboard
+microk8s.enable dashboard ingress
+
+# edit kubernetes-dashboard service
+# change type: ClusterIP to type: NodePort and save file
+kubectl -n kube-system edit service kubernetes-dashboard
+
+# check port on which Dashboard was exposed
+kubectl -n kube-system get service kubernetes-dashboard
+
+kubectl describe services kubernetes-dashboard --namespace=kube-system
+
+kubectl get pods --namespace=kube-system
+kubectl --namespace=kube-system log kubernetes-dashboard-7d75c474bb-7ph99
+
+
+# Dashboard alternative?
 
 # install the dashboard - do I need this?
 kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
@@ -183,7 +206,7 @@ mv /usr/share/nginx/html/files.tar .
 tar -xvf files.tar .
 
 # edit config file to flask app
-cd /home/spencer/mypv/conf.d/
+cd /home/spencer/mypv/mynginxdata/conf.d/
 vi default.conf
 server {
     listen       80;
