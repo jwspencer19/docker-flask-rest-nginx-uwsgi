@@ -12,6 +12,14 @@ TODO:
 - microservices with a UI. How is the UI split?
 - kops to create 3 node cluster (1 master, 2 worker nodes)
 
+TODO: Networking
+-pause
+network plugins:
+-cni
+-flannel
+-calico
+
+
 Read
 https://www.level-up.one/kubernetes-networking-pods-levelup/
 https://www.level-up.one/kubernetes-bible-beginners/
