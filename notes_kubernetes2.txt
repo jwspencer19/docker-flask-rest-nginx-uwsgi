@@ -12,6 +12,9 @@ TODO:
 - microservices with a UI. How is the UI split?
 - kops to create 3 node cluster (1 master, 2 worker nodes)
 
+Read
+https://www.level-up.one/kubernetes-networking-pods-levelup/
+https://www.level-up.one/kubernetes-bible-beginners/
 
 # quick way to run a Docker image on Kubernetes cluster without a deployment file
 kubectl run my-name-here --image=image-here:version --port 8080
