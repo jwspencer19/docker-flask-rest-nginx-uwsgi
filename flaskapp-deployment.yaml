@@ -32,8 +32,7 @@ spec:
         tier: frontend
     spec:
       containers:
-      - image: docker-flask-rest-nginx-uwsgi_flask:latest
-        imagePullPolicy: IfNotPresent
+      - image: spencer19/docker-flask-rest-nginx-uwsgi_flask:v1
         name: flaskapp
         env:
         - name: POSTGRES_DB_HOST
@@ -43,3 +42,5 @@ spec:
         ports:
         - containerPort: 8080
           name: flaskapp
+      imagePullSecrets:
+      - name: myregistrykey          
