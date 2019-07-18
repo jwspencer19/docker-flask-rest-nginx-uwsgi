@@ -320,3 +320,32 @@ helm init
 # verify tiller is running
 kubectl get pods --namespace kube-system
 
+
+Docker Hub
+
+https://hub.docker.com/
+
+
+docker login --username=spencer19
+
+docker images
+REPOSITORY                                                 TAG                 IMAGE ID            CREATED             SIZE
+docker-flask-rest-nginx-uwsgi_flask                        latest              cada138f5a83        5 weeks ago         963MB
+spencer19/mynginx                                          v1                  b1bd6ba3d26b        13 minutes ago      109MB
+...
+
+docker tag cada138f5a83 spencer19/docker-flask-rest-nginx-uwsgi_flask:v1
+docker push spencer19/docker-flask-rest-nginx-uwsgi_flask
+
+docker tag b1bd6ba3d26b spencer19/mynginx:v1
+docker push spencer19/mynginx
+
+
+Add Kubernetes Secret to my Docker Hub
+
+kubectl create secret docker-registry <name> --docker-server=DOCKER_REGISTRY_SERVER --docker-username=DOCKER_USER --docker-password=DOCKER_PASSWORD --docker-email=DOCKER_EMAIL
+# todo fill in other details
+kubectl create secret docker-registry myregistrykey --docker-server=docker.io --docker-username=DOCKER_USER --docker-password=DOCKER_PASSWORD --docker-email=DOCKER_EMAIL
+
+
+# update flaskapp-deployment.yaml with the image and secret details
