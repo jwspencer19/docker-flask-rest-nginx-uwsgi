@@ -1,3 +1,29 @@
+TODO:
+- understand deployments and dependencies
+- understand networks with deployments, keep together vs anywhere. Pros and cons.
+- look into ingress and ability to proxy, can this replace nginx?
+- horizontal pod autoscaler (HPA)
+- istio
+- script Postman
+- update JWT access
+- logging to elasticsearch
+- version deployments and updates, add version to code
+- Jenkins for automation
+- microservices with a UI. How is the UI split?
+- kops to create 3 node cluster (1 master, 2 worker nodes)
+
+TODO: Networking
+-pause
+network plugins:
+-cni
+-flannel
+-calico
+
+
+Read
+https://www.level-up.one/kubernetes-networking-pods-levelup/
+https://www.level-up.one/kubernetes-bible-beginners/
+
 # quick way to run a Docker image on Kubernetes cluster without a deployment file
 kubectl run my-name-here --image=image-here:version --port 8080
 
@@ -9,7 +35,7 @@ kubectl run hazelcast --image=hazelcast --port=5701
 # expose the deployment, NodePort allows us to have a external IP address exposed
 kubectl expose deployment my-flask-app --type=NodePort
 kubectl expose deployment hello-minikube --type=NodePort
-
+kubectl expose deployment kubernetes-dashboard --type=NodePort
 
 # useful commmands
 kubectl get all --all-namespaces
@@ -26,6 +52,10 @@ kubectl describe deployments my-flask-app
 kubectl get services
 kubectl describe services my-flask-app
 kubectl get all -n kube-system
+
+kubectl create namespace <namespace>
+kubectl create -or- apply -f <filename>.yaml --namespace=<namespace>
+kubectl describe deployment <deployment-name> --namespace=<namespace>
 
 # delete deployment
 kubectl delete deployment my-flask-app
@@ -98,6 +128,24 @@ kubectl describe deployment tomcat-deployment
 
 
 # Dashboard
+microk8s.enable dashboard ingress
+
+# edit kubernetes-dashboard service
+# change type: ClusterIP to type: NodePort and save file
+kubectl -n kube-system edit service kubernetes-dashboard
+
+# check port on which Dashboard was exposed
+kubectl -n kube-system get service kubernetes-dashboard
+
+kubectl describe services kubernetes-dashboard --namespace=kube-system
+
+kubectl get pods --namespace=kube-system
+kubectl --namespace=kube-system log kubernetes-dashboard-7d75c474bb-7ph99
+
+kubectl -n kube-system get secret
+kubectl -n kube-system describe secret default-token-{xxxx}
+
+# Dashboard alternative?
 
 # install the dashboard - do I need this?
 kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
@@ -183,7 +231,7 @@ mv /usr/share/nginx/html/files.tar .
 tar -xvf files.tar .
 
 # edit config file to flask app
-cd /home/spencer/mypv/conf.d/
+cd /home/spencer/mypv/mynginxdata/conf.d/
 vi default.conf
 server {
     listen       80;
@@ -240,3 +288,35 @@ kubectl get pv task-pv-volume
 
 # look at the  PersistentVolumeClaim:
 kubectl get pvc task-pv-claim
+
+
+Usage & Resource Monitoring
+- Heapster is Kubernetes Container Cluster Monitoring solution
+
+
+Horizontal Pod Autoscaler (HPA)
+# example
+kubectl autoscale deployment <name> --cpu-percent=50 --min=1 --max=10
+
+# note: might need to start multiple instances to create enough CPU usage
+# simulate load using infinite HTTP request loop
+kubectl run -i --tty load-generator --image=busybox --generator=run-pod/v1 /bin/sh
+(hit enter for command prompt)
+while true;do wget -q -O- http://wordpress.default.svc.cluster.local;done
+
+
+# check the HPA status, might take a while to see the CPU usage to increase
+kubectl get hpa
+
+
+Helm
+
+# install with snap
+sudo snap install helm
+
+# init helm to our cluster
+helm init
+
+# verify tiller is running
+kubectl get pods --namespace kube-system
+
