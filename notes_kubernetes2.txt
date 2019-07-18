@@ -348,4 +348,4 @@ kubectl create secret docker-registry <name> --docker-server=DOCKER_REGISTRY_SER
 kubectl create secret docker-registry myregistrykey --docker-server=docker.io --docker-username=DOCKER_USER --docker-password=DOCKER_PASSWORD --docker-email=DOCKER_EMAIL
 
 
-# update flaskapp-deployment.yaml with the image and secret details
+# update flaskapp-deployment.yaml ngnix-deployment.yaml with the image and secret details
