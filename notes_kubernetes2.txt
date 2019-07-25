@@ -1,16 +1,18 @@
 TODO:
 - understand deployments and dependencies
 - understand networks with deployments, keep together vs anywhere. Pros and cons.
-- look into ingress and ability to proxy, can this replace nginx?
+- look into ingress and ability to proxy, can this replace nginx? Switch uWSGI to Gunicorn to remove binary protocol
 - horizontal pod autoscaler (HPA)
-- istio
-- script Postman
+- network policies (L3/L4?): kubectl get networkpolicies
+- security policies - IAM, RBAC (role based access control), network control
+- istio (L7) - service mesh, plus other benefits
+- script Postman - create test program that creates load
 - update JWT access
 - logging to elasticsearch
 - version deployments and updates, add version to code
 - Jenkins for automation
 - microservices with a UI. How is the UI split?
-- kops to create 3 node cluster (1 master, 2 worker nodes)
+
 
 TODO: Networking
 -pause
@@ -52,6 +54,7 @@ kubectl describe deployments my-flask-app
 kubectl get services
 kubectl describe services my-flask-app
 kubectl get all -n kube-system
+kubectl get endpoints
 
 kubectl create namespace <namespace>
 kubectl create -or- apply -f <filename>.yaml --namespace=<namespace>
