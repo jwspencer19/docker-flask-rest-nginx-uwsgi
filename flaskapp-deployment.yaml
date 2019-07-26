@@ -5,9 +5,10 @@ metadata:
   labels:
     app: flaskapp
 spec:
-  type: ClusterIP
+  type: NodePort # use ClusterIP as type here, using NodePort for debugging
   ports:
-    - port: 8080    
+    - port: 8080  
+      nodePort: 30003          
   selector:
     app: flaskapp
     tier: frontend
@@ -32,7 +33,7 @@ spec:
         tier: frontend
     spec:
       containers:
-      - image: spencer19/docker-flask-rest-nginx-uwsgi_flask:v1
+      - image: spencer19/docker-flask-rest-nginx-uwsgi_flask:v2
         name: flaskapp
         env:
         - name: POSTGRES_DB_HOST
@@ -42,5 +43,4 @@ spec:
         ports:
         - containerPort: 8080
           name: flaskapp
-      imagePullSecrets:
-      - name: myregistrykey          
+          
