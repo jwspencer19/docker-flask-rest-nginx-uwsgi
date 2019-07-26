@@ -25,15 +25,19 @@
     __pycache__/
 
 
+##### start postgres docker container separately if not using docker-compose
+    docker run --rm  --name pg-docker -e POSTGRES_PASSWORD=docker -v /home/spencer/mypv/mypostgresdata:/var/lib/postgresql/data -d -p 5432:5432 postgres:latest
+
 ##### to test our flask app locally
     export FLASK_APP=run.py
     export FLASK_ENV=development
 
     flask run
+    
+##### to test our flask app via uwsgi
+    export DATABASE_URL=postgresql://postgres:docker@<system-name>:5432/postgres
+    uwsgi app.ini
 
-
-##### start postgres docker container separately for now, until added to docker-compose
-    docker run --rm  --name pg-docker -e POSTGRES_PASSWORD=docker -v /home/spencer/postgres_data:/var/lib/postgresql/data -d -p 5432:5432 postgres:latest
 
 
 
