@@ -229,9 +229,9 @@ tar -cvf /usr/share/nginx/html/files.tar .
 # exit docker container
 exit
 # on host, untar files
-cd /home/spencer/mypv
-mv /usr/share/nginx/html/files.tar .
-tar -xvf files.tar .
+cd /home/spencer/mypv/mynginxdata
+mv /home/spencer/html/files.tar .
+tar -xvf files.tar
 
 # edit config file to flask app
 cd /home/spencer/mypv/mynginxdata/conf.d/
@@ -255,11 +255,11 @@ server {
 ...
 
 # run docker container with local copy of config files
-docker run --name mynginx2 -v /home/spencer/mypv:/etc/nginx -p 8083:80 nginx
+docker run --name mynginx2 -v /home/spencer/mypv/mynginxdata:/etc/nginx -p 8083:80 nginx
 # run in background
-docker run --name mynginx2 -v /home/spencer/mypv:/etc/nginx -p 8083:80 -d nginx
+docker run --name mynginx2 -v /home/spencer/mypv/mynginxdata:/etc/nginx -p 8083:80 -d nginx
 # not sure what -P is
-docker run --name mynginx2 -v /home/spencer/mypv:/etc/nginx -p 8083:80 -P -d nginx
+docker run --name mynginx2 -v /home/spencer/mypv/mynginxdata:/etc/nginx -p 8083:80 -P -d nginx
 
 # exec into nginx pod name running debian
 kubectl exec -it nginx-deployment-94d56d68c-rt9p6 bash
