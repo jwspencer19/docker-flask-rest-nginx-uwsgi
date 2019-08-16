@@ -8,7 +8,8 @@ TODO:
 - istio (L7) - service mesh, plus other benefits
 - script Postman - create test program that creates load
 - update JWT access
-- logging to elasticsearch
+- logging to elasticsearch and kibana (ELK) including metrics
+- promotheus
 - version deployments and updates, add version to code
 - Jenkins for automation
 - microservices with a UI. How is the UI split?
